@@ -74,9 +74,6 @@
          return repoContribution[repoId].length;
 
 
-
-
-
      }
 
    function() payable {
@@ -92,7 +89,7 @@
 
 //       Contributor[] contributors = repoContribution[repoId];
 
-       uint totalRatings;
+       uint totalRatings = 0;
 
 
        for (uint i = 0 ; i < repoContribution[repoId].length ; i++) {
@@ -101,11 +98,8 @@
        }
 
        for (i = 0 ; i < repoContribution[repoId].length ; i++) {
-//           address add = repoContribution[repoId][i].cAddress;
-           address add = 0x3033a3c2f7f92ecca6edc8603c50a1701e678ddb;
 
-           Contributor cont = 
-           add.transfer(value) ;
+               repoContribution[repoId][i].cAddress.transfer((value * repoContribution[repoId][i].rating) / totalRatings);
 
        }
 
