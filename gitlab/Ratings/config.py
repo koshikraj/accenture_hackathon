@@ -1,0 +1,1 @@
+repo_db = 'postgresql://postgres:postgres@localhost:5432/ratings'
