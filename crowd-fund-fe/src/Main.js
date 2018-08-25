@@ -3,12 +3,12 @@ import Web3 from 'web3';
 import { default as contract } from 'truffle-contract'
 import voting_artifacts from './contracts/Voting.json'
 class Main extends Component {
-
     constructor(props) {
         super(props);
         this.state = {isConnected: false};
-    }
 
+
+    }
     componentWillMount() {
         if(this.web3 && this.web3.isConnected()) {
             this.setState({isConnected: true});
@@ -90,7 +90,6 @@ class Main extends Component {
         console.log(repoId);
         try {
             var user_address = this.user_address;
-            console.log(user_address);
             var web3 = this.web3;
         this.voting.deployed().then(function(contractInstance) {
 
@@ -108,11 +107,11 @@ class Main extends Component {
         return (
             <div>
 
-                <button onClick={(e) => this.createRepo("123456")}> Create repo </button>
+                <button onClick={(e) => this.createRepo("1")}> Create repo </button>
 
-                <button onClick={(e) => this.updateRating("123456", "0xec7aeb1746b88699011fd1b096409cce84b67d8b", 55 )}> update rating </button>
+                <button onClick={(e) => this.updateRating("1", "0x176a76b1719661019d57adbc461ef00e310d1d33", 100 )}> update rating </button>
 
-                <button onClick={(e) => this.crowdFund("123456")}> Create repo </button>
+                <button onClick={(e) => this.crowdFund("1")}> Create repo </button>
 
 
     </div>
