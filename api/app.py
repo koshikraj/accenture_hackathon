@@ -4,6 +4,8 @@ import mimetypes
 from wsgiref import simple_server
 from controller import *
 from falcon.http_status import HTTPStatus
+from controllers.ratings import Ratings
+from controllers.user import UserDetails
 WEBSITE_BASE_URL = '0.0.0.0'
 WEBSITE_BASE_PORT = 8888
 # from project.component import *
@@ -23,6 +25,9 @@ class HandleCORS(object):
 apps = falcon.API(middleware=[HandleCORS()])
 apps.add_route("/repositories/", Repositories())
 apps.add_route("/files/", Files())
+apps.add_route('/ratings', Ratings())
+apps.add_route('/users', UserDetails())
+
 
 if __name__ == "__main__":
     def static(req, res, static_dir='static', index_file='index.html'):
