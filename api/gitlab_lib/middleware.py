@@ -31,6 +31,16 @@ class Repo:
         repo = gl.projects.get(id)
         return repo.repository_tree()
 
+    def get_repo_all_commits(self, id):
+        repo = gl.projects.get(id)
+        commit_list = repo.commits.list()
+        commit_data = []
+        for each_commit in commit_list:
+            # print(each_commit.__dict__['_attrs'])
+            commit_data.append(each_commit.__dict__['_attrs'])
+
+        return commit_data
+
 
 class User:
 
@@ -52,7 +62,11 @@ class User:
 # print(all_repo_details)
 
 # repo = Repo()
-# print(repo.get_repo_files_by_id(1))
+# commit_list = repo.get_repo_all_commits(1)
+# print(type(commit_list))
+# for each_commit in commit_list:
+#     print(each_commit)
+    # break
 
 
 # print(repos[1].get_file_content((repos[1].files()[3]['id'])))

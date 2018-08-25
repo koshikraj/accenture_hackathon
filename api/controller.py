@@ -33,12 +33,17 @@ class Files:
             repo_id = req.get_param('repo_id', 0)
 
             repo = Repo()
-            repo_fles = repo.get_repo_files_by_id(repo_id)
+            repo_files = repo.get_repo_files_by_id(repo_id)
+            repo_commit = repo.get_repo_all_commits(repo_id)
 
             res.status = falcon.HTTP_200
             res.body = json.dumps({'status': True,
-                                    'data': repo_fles,
-                                    'message': 'success'
+                                   'data': {
+                                       'files': repo_files,
+                                       'commits': repo_commit
+                                   },
+
+                                   'message': 'success'
                                    })
         except Exception as e:
             res.status = falcon.HTTP_400
