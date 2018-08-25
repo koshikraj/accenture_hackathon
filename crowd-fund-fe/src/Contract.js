@@ -5,7 +5,10 @@ import voting_artifacts from './contracts/Voting.json'
 import "./node_modules/font-awesome/css/font-awesome.min.css";
 export default class Contract {
 
+
     initContract(){
+        this.foundAddress = this.foundAddress.bind(this);
+
         this.initWeb3Connection();
         this.voting = contract(voting_artifacts);
         this.voting.setProvider(this.web3.currentProvider);
@@ -21,7 +24,7 @@ export default class Contract {
             this.user_address = this.web3.eth.accounts[0];
 
         } else {
-            console.log('No web3? You should consider trying MetaMask!')
+            console.log('No web3? You should consider trying MetaMask!');
             // fallback - use your fallback strategy (local node / hosted node + in-dapp id mgmt / fail)
             this.web3 = new Web3(new Web3.providers.HttpProvider("http://localhost:8545"));
         }
@@ -68,14 +71,21 @@ export default class Contract {
 
     }
 
-    getUserBalance(address) {
+
+
+    foundAddress(a,b){
+        this.address_amount = [];
+        console.log(this.web3.fromWei(b.toLocaleString(), 'ether'));
+
+    }
+
+    getUserBalance(address, callbackHandler) {
+
         let web3 = this.web3;
-        this.web3.eth.getBalance(address, function (a, b) {
-
-            console.log(web3.fromWei(b.toLocaleString(), 'ether'));
-
-        })
-
+        this.web3.eth.getBalance(address,((a,b)=>{
+            callbackHandler(address, this.web3.fromWei(b.toLocaleString(), 'ether'));
+        }));
+        // console.log(this.web3.fromWei(this.web3.eth.getBalance('0xebe41ec4c574fde7a1d13d333d17267ca93df491'), "ether"))
 
     }
 

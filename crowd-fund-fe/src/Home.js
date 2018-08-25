@@ -72,7 +72,7 @@ class Home extends Component {
                 <nav className="navbar navbar-expand-lg">
                     <div className="container">
                         <div className="nav-user">
-                            <i className="fa fa-user-circle 2x" aria-hidden="true"></i> <a className="nav-link disabled" href="#">Koshik Raj</a>
+                            <i className="fa fa-user-circle 2x" aria-hidden="true"></i> <a className="nav-link disabled" href="#">Consensus</a>
                         </div>
                     </div>
                 </nav>

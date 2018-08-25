@@ -109,7 +109,7 @@ class Main extends Component {
 
                 <button onClick={(e) => this.createRepo("1")}> Create repo </button>
 
-                <button onClick={(e) => this.updateRating("1", "0x176a76b1719661019d57adbc461ef00e310d1d33", 100 )}> update rating </button>
+                <button onClick={(e) => this.updateRating("1", "0xba519a5f622658764fd99af6ac5a3759caf7c8c5", 100 )}> update rating </button>
 
                 <button onClick={(e) => this.crowdFund("1")}> Create repo </button>
 

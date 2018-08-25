@@ -13,21 +13,46 @@ class Repo extends Component {
         this.state = {files: [],
                       contributors: [],
                       scene: 'code',
-                      ratingOverlay: 'none'};
+                      ratingOverlay: 'none',
+                      amounts:{},
+                      commits: [],
+                      codeType: 'files'};
         this.contract = new Contract();
         this.contract.initContract();
-        this.contract.getUserBalance('0xfda013eecad647a2593aacbb3c18445f051d0f52');
+        this.rating = 0;
+        this.votes = 0;
+        this.callbackHandler = this.callbackHandler.bind(this);
+
+
+
+    }
+
+    callbackHandler(address, amount){
+        let amounts = this.state.amounts;
+        console.log(amounts);
+        amounts[address] = amount;
+        this.setState({amounts: amounts});
 
     }
 
     componentDidMount() {
         fetch(API + 'files?repo_id=' + this.props.details.id)
             .then(response => response.json())
-            .then(response => {console.log(response);this.setState({ files: response.data.files })});
+            .then(response => {
+                console.log(response);
+                this.setState({files: response.data.files,
+                               commits: response.data.commits})
+            });
 
         fetch(API + 'users?repo_id=' + this.props.details.id)
             .then(response => response.json())
-            .then(response => {console.log(response); this.setState({ contributors: response.data })});
+            .then(response => {
+                console.log(response);
+                this.setState({contributors: response.data});
+                for (let i = 0; i < response.data.length; i++) {
+                    this.contract.getUserBalance(response.data[i].address, this.callbackHandler);
+                }
+            });
     }
 
     listFiles() {
@@ -56,6 +81,35 @@ class Repo extends Component {
         return fileList;
     }
 
+    listCommits(){
+
+        let contributorsList = [];
+        for (let fileI = 0; fileI < this.state.commits.length; fileI++) {
+
+            let contributor = <div className="table--content">
+                <div className="table--content__column rank">{this.state.commits[fileI].short_id}</div>
+                <div className="table--content__column user">
+                    <span className="name"><a href="#">{this.state.commits[fileI].title}</a></span>
+                </div>
+                <div className="table--content__column commits">3</div>
+                <div className="table--content__column rating">
+                    <button onClick={()=> {this.setState({ratingOverlay: 'block'});
+                        this.rating = this.state.contributors[fileI].rating;
+                        this.votes = this.state.contributors[fileI].votes;
+                        this.address = this.state.contributors[fileI].address;
+                        this.user_id = this.state.contributors[fileI].user_id}} className="rating-button">
+                        <i className="fa fa-star-o" aria-hidden="true" /> Rate
+                    </button>
+                </div>
+             </div>;
+
+            contributorsList.push(contributor);
+        }
+        return contributorsList;
+
+
+    }
+
     listContributors(){
 
         let contributorsList = [];
@@ -69,12 +123,16 @@ class Repo extends Component {
             </div>
             <div className="table--content__column commits">{this.state.contributors[fileI].votes}</div>
             <div className="table--content__column rating">
-                <button onClick={()=> {this.setState({ratingOverlay: 'block'})}} className="rating-button">
+                <button onClick={()=> {this.setState({ratingOverlay: 'block'});
+                this.rating = this.state.contributors[fileI].rating;
+                this.votes = this.state.contributors[fileI].votes;
+                this.address = this.state.contributors[fileI].address;
+                this.user_id = this.state.contributors[fileI].user_id}} className="rating-button">
                     <i className="fa fa-star-o" aria-hidden="true" /> Rate
                 </button>
             </div>
             <div className="table--content__column avg">{this.state.contributors[fileI].rating / this.state.contributors[fileI].votes}</div>
-            <div className="table--content__column earnings">1.8 etherium</div>
+            <div className="table--content__column earnings">{Number.parseFloat(this.state.amounts[this.state.contributors[fileI].address]).toFixed(2)} ETH</div>
         </div>;
 
         contributorsList.push(contributor);
@@ -84,10 +142,23 @@ class Repo extends Component {
 
     }
 
-    rateContributor(rating) {
+    rateContributor(new_rating) {
+
+        let updatedRating = (this.rating + new_rating) / (this.votes + 1);
         this.setState({ratingOverlay: 'none'});
-        this.contract.updateRating(this.props.details.id, '0x7af5aed63dd720f71315e0990b5f1e2277437e7a', rating);
-    }
+        this.contract.updateRating(this.props.details.id, this.address, Number.parseFloat(updatedRating).toFixed(1) * 10);
+        fetch(API + 'ratings',
+            { method: 'PUT',
+              body: JSON.stringify({"rating": new_rating,
+                  "repo_id": this.props.details.id,
+                  "user_id": 1
+              })})
+            .then(response => response.json())
+            .then(response => {
+                console.log(response);
+
+            })
+    };
 
   render() {
 
@@ -115,7 +186,7 @@ class Repo extends Component {
                     </div>
                     <nav className="reponav js-repo-nav js-sidenav-container-pjax container clearfix" itemScope itemType="http://schema.org/BreadcrumbList" role="navigation" data-pjax="#js-repo-pjax-container">
         <span itemScope itemType="http://schema.org/ListItem" itemProp="itemListElement">
-          <a onClick={()=>{this.setState({scene: 'code'})}} className="js-selected-navigation-item selected reponav-item" itemProp="url" data-hotkey="g c" data-selected-links="repo_source repo_downloads repo_commits repo_releases repo_tags repo_branches repo_packages /koshikraj/pynaivechain" href="#">
+          <a onClick={()=>{this.setState({scene: 'code', codeType: 'files'})}} className="js-selected-navigation-item selected reponav-item" itemProp="url" data-hotkey="g c" data-selected-links="repo_source repo_downloads repo_commits repo_releases repo_tags repo_branches repo_packages /koshikraj/pynaivechain" href="#">
             <svg className="octicon octicon-code" viewBox="0 0 14 16" version="1.1" width={14} height={16} aria-hidden="true"><path fillRule="evenodd" d="M9.5 3L8 4.5 11.5 8 8 11.5 9.5 13 14 8 9.5 3zm-5 0L0 8l4.5 5L6 11.5 2.5 8 6 4.5 4.5 3z" /></svg>
             <span itemProp="name">Code</span>
             <meta itemProp="position" content={1} />
@@ -149,12 +220,12 @@ class Repo extends Component {
                                     <div className="stats-switcher-wrapper">
                                         <ul className="numbers-summary">
                                             <li className="commits">
-                                                <a data-pjax href="/koshikraj/pynaivechain/commits/master">
+                                                <a data-pjax onClick={()=>{this.setState({codeType: 'commits'});}} href="#">
                                                     <svg className="octicon octicon-history" viewBox="0 0 14 16" version="1.1" width={14} height={16} aria-hidden="true"><path fillRule="evenodd" d="M8 13H6V6h5v2H8v5zM7 1C4.81 1 2.87 2.02 1.59 3.59L0 2v4h4L2.5 4.5C3.55 3.17 5.17 2.3 7 2.3c3.14 0 5.7 2.56 5.7 5.7s-2.56 5.7-5.7 5.7A5.71 5.71 0 0 1 1.3 8c0-.34.03-.67.09-1H.08C.03 7.33 0 7.66 0 8c0 3.86 3.14 7 7 7s7-3.14 7-7-3.14-7-7-7z" /></svg>
                                                     <span className="num text-emphasized">
-                        19
+                                                        {this.state.commits.length}
                       </span>
-                                                    Votes
+                                                    commits
                                                 </a>
                                             </li>
                                             <li>
@@ -197,6 +268,8 @@ class Repo extends Component {
                             </div>
                             <div className="file-wrap">
                                 <a className="d-none js-permalink-shortcut" data-hotkey="y" href="/koshikraj/pynaivechain/tree/99caabcff9833dbc521a5c6bf6884a337713c9c9">Permalink</a>
+
+
                                 <table className="files js-navigation-container js-active-navigation-container" data-pjax>
                                     <tbody>
                                     <tr className="warning include-fragment-error">
@@ -204,11 +277,12 @@ class Repo extends Component {
                                         <td className="content" colSpan={3}>Failed to load latest commit information.</td>
                                     </tr>
 
-                                    {this.listFiles()}
+                                    {this.state.codeType == 'files'? this.listFiles(): this.listCommits()}
 
 
                                     </tbody>
                                 </table>
+
                             </div>
                         </div>
                     </div>
@@ -300,7 +374,7 @@ class Repo extends Component {
                                         <span onClick={()=>{this.rateContributor(7);}}><i className="fa fa-star-o" aria-hidden="true" /></span>
                                         <span onClick={()=>{this.rateContributor(8);}}><i className="fa fa-star-o" aria-hidden="true" /></span>
                                         <span onClick={()=>{this.rateContributor(9);}}><i className="fa fa-star-o" aria-hidden="true" /></span>
-                                        <span onClick={()=>{this.rateContributor(20);}}><i className="fa fa-star-o" aria-hidden="true" /></span>
+                                        <span onClick={()=>{this.rateContributor(10);}}><i className="fa fa-star-o" aria-hidden="true" /></span>
                                     </div>
                                 </div>
                             </div>
