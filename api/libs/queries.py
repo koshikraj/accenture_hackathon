@@ -29,7 +29,8 @@ def get_users(repo_id):
                 'user_id': d.user.id,
                 'name': d.user.name,
                 'rating': d.rating,
-                'votes': d.votes
+                'votes': d.votes,
+                'address': d.user.public_address
             })
 
     return users_data
