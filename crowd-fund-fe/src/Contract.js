@@ -71,9 +71,6 @@ export default class Contract {
     getUserBalance(address) {
         let web3 = this.web3;
         this.web3.eth.getBalance(address, function (a, b) {
-
-            console.log(web3.fromWei(b.toLocaleString(), 'ether'));
-
         })
 
 

@@ -6,8 +6,9 @@
     "react": "^16.4.2",
     "react-dom": "^16.4.2",
     "react-scripts": "1.1.5",
-    "web3": "^0.20.6",
-    "truffle-contract": "^3.0.6"
+    "reactjs-popup": "^1.2.0",
+    "truffle-contract": "^3.0.6",
+    "web3": "^0.20.6"
   },
   "scripts": {
     "start": "react-scripts start",
