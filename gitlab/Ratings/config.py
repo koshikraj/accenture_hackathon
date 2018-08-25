@@ -1,1 +1,1 @@
-repo_db = 'postgresql://postgres:postgres@localhost:5432/ratings'
+repo_db = 'postgresql://postgres:postgres@hackathon.koshikraj.com:5432/ratings'
