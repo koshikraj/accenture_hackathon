@@ -13,15 +13,17 @@ class App extends Component {
         this.componentCallback = this.componentCallback.bind(this)
     }
 
-    componentCallback(e) {
-        this.setState({page: 'page'})
+    componentCallback(repo_details=[]) {
+
+        this.setState({page: 'page',
+                       repo_details: repo_details})
     }
 
   render() {
     return (
-        <div>
-        {this.state.page === 'home' ? <Home page={this.componentCallback}/> : <Repo/>}
-        </div>
+
+        this.state.page === 'home' ? <Home page={this.componentCallback}/> : <Repo details={this.state.repo_details}/>
+
 
     );
   }
