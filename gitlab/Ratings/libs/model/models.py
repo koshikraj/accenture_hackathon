@@ -3,7 +3,7 @@ from sqlalchemy import Column, ForeignKey, Integer, String, DateTime, Date
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship
 from sqlalchemy import create_engine
-from config import ratings_db
+from config import repo_db
 
 Base = declarative_base()
 
@@ -32,9 +32,8 @@ class Ratings(Base):
     rating = Column(Integer)
     votes = Column(Integer)
     user_id = Column(Integer, ForeignKey('user.id'))
-    repo_id = Column(Integer, ForeignKey('repo.id'))
+    repo_id = Column(Integer)
 
-    repo = relationship("Repository", back_populates="ratings")
     user = relationship("User", back_populates="ratings")
 
     def __init__(self, user_id, repo_id):
@@ -42,5 +41,5 @@ class Ratings(Base):
         self.repo_id = repo_id
 
 
-engine = create_engine(ratings_db)
+engine = create_engine(repo_db)
 Base.metadata.create_all(engine)

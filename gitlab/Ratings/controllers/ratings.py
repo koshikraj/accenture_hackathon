@@ -8,7 +8,7 @@ class Ratings(object):
             Update the user ratings,
     """
 
-    def on_put(req, resp, ):
+    def on_put(self, req, resp):
         try:
             body = json.loads(req.stream.read().decode('utf-8'))
             rating = body.get('rating')
@@ -31,3 +31,4 @@ class Ratings(object):
 
         except Exception as e:
             print(e)
+            pass

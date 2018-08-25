@@ -1,5 +1,6 @@
 import falcon
 from controllers.ratings import Ratings
+from controllers.user import UserDetails
 from falcon_cors import CORS
 
 
@@ -9,4 +10,5 @@ cors = CORS(allow_all_origins=True,
 
 app = falcon.API(middleware=[cors.middleware])
 
-app.add_route('/users/ratings', Ratings())
+app.add_route('/ratings', Ratings())
+app.add_route('/users', UserDetails())

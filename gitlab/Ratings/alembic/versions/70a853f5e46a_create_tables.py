@@ -1,7 +1,7 @@
 """create tables
 
 Revision ID: 70a853f5e46a
-Revises: 
+Revises:
 Create Date: 2018-08-25 13:54:19.121463
 
 """
@@ -37,8 +37,8 @@ def upgrade():
         sa.Column('id', sa.Integer, primary_key=True),
         sa.Column('rating', sa.Integer),
         sa.Column('votes', sa.Integer),
-        sa.Column('user_id', sa.Integer),
-        sa.Column('repo_id', sa.Integer)
+        sa.Column('user_id', sa.Integer, sa.ForeignKey('user.id')),
+        sa.Column('repo_id', sa.Integer),
     )
 
 

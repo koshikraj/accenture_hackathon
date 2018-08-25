@@ -1,14 +1,18 @@
 # from datetime import date, datetime
-# from utils.logger import logger
+from sqlalchemy import and_
 from libs.model import repo_session
-from libs.model.models import Repository, Ratings
+from libs.model.models import Ratings
 
 
-def save_ratings(rating, votes, repo_id, user_id):
-    ratings = Ratings(user_id, repo_id)
-    repo_session.add(ratings)
-    ratings.rating = rating
-    ratings.votes = votes
+def save_ratings(rating, repo_id, user_id):
+
+    ratings = repo_session.query(Ratings).filter(
+        and_(Ratings.repo_id == repo_id, Ratings.user_id == user_id)).first()
+
+    print("got ratings data", ratings)
+
+    ratings.rating = ratings.rating + rating
+    ratings.votes = ratings.votes + 1
 
     repo_session.commit()
     return True
@@ -19,13 +23,13 @@ def get_users(repo_id):
     data = repo_session.query(Ratings).filter_by(repo_id=repo_id).all()
 
     users_data = []
-    for d in data:
-        user_dict = d.user
-        users_data.append({
-            'user_id': user_dict.get('id'),
-            'name': user_dict.get('name'),
-            'rating': d.rating,
-            'votes': d.votes
-        })
+    if data:
+        for d in data:
+            users_data.append({
+                'user_id': d.user.id,
+                'name': d.user.name,
+                'rating': d.rating,
+                'votes': d.votes
+            })
 
     return users_data

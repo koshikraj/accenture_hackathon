@@ -5,9 +5,9 @@ from libs.queries import get_users
 
 class UserDetails(object):
 
-    def on_get(req, resp):
+    def on_get(self, req, resp):
         try:
-            body = json.loads(req.stream.read().decode('utf-8'))
+            body = req.params
             repo_id = body.get('repo_id')
             details = get_users(repo_id)
 
@@ -20,4 +20,5 @@ class UserDetails(object):
             resp.body = json.dumps(dump_dict)
 
         except Exception as e:
-            raise e
+            print("Exception", e)
+            pass
