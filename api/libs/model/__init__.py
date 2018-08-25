@@ -2,8 +2,6 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from config import repo_db
 
-print('models sessions imported')
-
 conn_engine = create_engine(repo_db)
 
 try:

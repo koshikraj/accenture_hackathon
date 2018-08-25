@@ -36,10 +36,17 @@ class Repo:
         commit_list = repo.commits.list()
         commit_data = []
         for each_commit in commit_list:
-            # print(each_commit.__dict__['_attrs'])
-            commit_data.append(each_commit.__dict__['_attrs'])
-
+            temp = each_commit.__dict__['_attrs']
+            commit_obj = repo.commits.get(temp["id"])
+            temp["diff"] = commit_obj.diff()
+            commit_data.append(temp)
         return commit_data
+
+    def get_comit_diff(self, repo, commit_id):
+        # repo = gl.projects.get(id)
+        commit = repo.commits.get(commit_id)
+        # commit_list = repo.commits.diff()
+        return commit
 
 
 class User:
