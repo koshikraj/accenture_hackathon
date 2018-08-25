@@ -4,7 +4,7 @@ import './App.css';
 import './css/style.css';
 import Main from './Main';
 
-let API = 'http://localhost:8888/';
+let API = 'http://hackathon.koshikraj.com:8888/';
 
 class Home extends Component {
 
