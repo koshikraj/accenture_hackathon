@@ -72,10 +72,10 @@ export default class Contract {
     }
 
 
-
     foundAddress(a,b){
         this.address_amount = [];
         console.log(this.web3.fromWei(b.toLocaleString(), 'ether'));
+
 
     }
 

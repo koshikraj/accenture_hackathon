@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
+import Popup from "reactjs-popup";
 import logo from './logo.svg';
 import './App.css';
 import './css/style.css';
 import Contract from './Contract';
 
-let API = 'http://localhost:8888/';
+let API = 'http://hackathon.koshikraj.com:8888/';
 
 class Repo extends Component {
 
@@ -16,7 +17,10 @@ class Repo extends Component {
                       ratingOverlay: 'none',
                       amounts:{},
                       commits: [],
-                      codeType: 'files'};
+                      codeType: 'files',
+                      donatePop:false
+                  };
+
         this.contract = new Contract();
         this.contract.initContract();
         this.rating = 0;
@@ -241,11 +245,50 @@ class Repo extends Component {
                                     </div>
                                 </div>
                             </div>
-                            <div onClick={() => {this.contract.crowdFund(this.props.details.id, 10);}} className="clearfix" style={{display: 'block', width: '100%', marginBottom: 13}}>
+                            {/*<div onClick={() => {this.contract.crowdFund(this.props.details.id, 10);}} className="clearfix" style={{display: 'block', width: '100%', marginBottom: 13}}>
+                                                            <a href="#" className="btn btn-sm new-pull-request-btn donate-btn">
+                                                                Donate <span className="caret" />
+                                                            </a>
+                                                        </div>*/}
+                            <Popup
+                             trigger={<div onClick={() => {this.setState({donatePop:true})}} className="clearfix" style={{display: 'block', width: '100%', marginBottom: 13}}>
                                 <a href="#" className="btn btn-sm new-pull-request-btn donate-btn">
                                     Donate <span className="caret" />
                                 </a>
-                            </div>
+                            </div>}
+                            modal>{close => (
+                                <div style={{paddingLeft:80, marginTop:20, marginBottom:20}}>
+                                    <div>
+                                    <div>
+                                    <b style={{fontSize:20}}>Contribute to Repository</b>
+                                    <br/>
+                                    Donations will be given to contruibutors
+                                    </div>
+                                      <input style={{marginTop:10}} type="text" onChange={(eth)=>{this.setState({ether:eth.target.value})}} value={this.state.ether} placeholder="Enter amount" />
+                                      ETH
+                                    </div>
+                                    <div style={{marginTop:20}}>
+                                      <button
+                                        style={{color: '#fff',backgroundColor: '#85a6c1'}}
+                                        onClick={() => {
+                                          close();
+                                        }}
+                                      >
+                                        cancel
+                                      </button>
+                                      <button
+                                        style={{marginLeft:20,color: '#fff',backgroundColor: '#85a6c1'}}
+                                        onClick={() => {
+                                            this.contract.crowdFund(this.props.details.id, this.state.ether);
+                                            close();
+                                        }}
+                                      >
+                                        Contribute
+                                      </button>
+                                      </div>
+                                </div>
+                                )}
+                            </Popup>
                             <div style={{width: '100%'}} className="commit-tease js-details-container Details d-flex">
                                 <div className="AvatarStack flex-self-start ">
                                     <div className="AvatarStack-body" aria-label="koshikraj">
