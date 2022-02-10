@@ -9,7 +9,7 @@
   "author": "Mukesh Patil",
   "license": "ISC",
   "devDependencies": {
-    "node-sass": "^4.9.2"
+    "node-sass": "^7.0.0"
   },
   "dependencies": {
     "animate.css": "^3.7.0",
